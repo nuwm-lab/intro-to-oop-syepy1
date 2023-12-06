@@ -1,0 +1,64 @@
+using System;
+
+class Point3D
+{
+    private int x;
+    private int y;
+    private int z;
+
+    public Point3D(int x, int y, int z)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public bool AreCoordinatesInteger()
+    {
+        return x % 1 == 0 && y % 1 == 0 && z % 1 == 0;
+    }
+
+    public bool IsInFirstOctant()
+    {
+        return x > 0 && y > 0 && z > 0;
+    }
+
+    public void SetCoordinates(int x, int y, int z)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public void PrintCoordinates()
+    {
+        Console.WriteLine($"Координати точки: ({x}, {y}, {z})");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Введіть координати точки (x, y, z):");
+        string[] input = Console.ReadLine().Split();
+
+        if (input.Length == 3 && int.TryParse(input[0], out int x) && int.TryParse(input[1], out int y) && int.TryParse(input[2], out int z))
+        {
+            Point3D point = new Point3D(x, y, z);
+
+            Console.WriteLine("Введені координати:");
+            point.PrintCoordinates();
+
+            Console.WriteLine("Чи всі координати цілочислові?");
+            Console.WriteLine(point.AreCoordinatesInteger() ? "Так" : "Ні");
+
+            Console.WriteLine("Чи точка знаходиться в першому октанті?");
+            Console.WriteLine(point.IsInFirstOctant() ? "Так" : "Ні");
+        }
+        else
+        {
+            Console.WriteLine("Неправильний формат вводу координат.");
+        }
+    }
+}
