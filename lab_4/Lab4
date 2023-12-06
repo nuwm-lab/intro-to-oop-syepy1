@@ -1,0 +1,95 @@
+using System;
+
+public class PolarCoordinates
+{
+    public double Radius { get; set; }
+    public double Angle { get; set; }
+
+    public void SetPolarCoordinates(double radius, double angle)
+    {
+        Radius = radius;
+        Angle = angle;
+    }
+
+    public void SetCartesianCoordinates(double x, double y)
+    {
+        Radius = Math.Sqrt(x * x + y * y);
+        Angle = Math.Atan2(y, x);
+    }
+
+    public (double, double) ConvertToCartesian()
+    {
+        double x = Radius * Math.Cos(Angle);
+        double y = Radius * Math.Sin(Angle);
+        return (x, y);
+    }
+}
+
+public class CylindricalCoordinates : PolarCoordinates
+{
+    public double Height { get; set; }
+
+    public void SetCylindricalCoordinates(double radius, double angle, double height)
+    {
+        Radius = radius;
+        Angle = angle;
+        Height = height;
+    }
+
+    public new void SetCartesianCoordinates(double x, double y, double z)
+    {
+        base.SetCartesianCoordinates(x, y);
+        Height = z;
+    }
+
+    public new (double, double, double) ConvertToCartesian()
+    {
+        (double x, double y) = base.ConvertToCartesian();
+        return (x, y, Height);
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Введіть полярні координати (Радіус Кут):");
+        string[] polarInput = Console.ReadLine()?.Split();
+        if (polarInput != null && polarInput.Length == 2 &&
+            double.TryParse(polarInput[0], out double polarRadius) &&
+            double.TryParse(polarInput[1], out double polarAngle))
+        {
+            PolarCoordinates polarPoint = new PolarCoordinates();
+            polarPoint.SetPolarCoordinates(polarRadius, polarAngle);
+
+            Console.WriteLine($"Полярні координати: Радіус = {polarPoint.Radius}, Кут = {polarPoint.Angle}");
+
+            (double x, double y) = polarPoint.ConvertToCartesian();
+            Console.WriteLine($"Перетворено у Декартові: X = {x}, Y = {y}");
+        }
+        else
+        {
+            Console.WriteLine("Неправильний формат введення для полярних координат.");
+        }
+
+        Console.WriteLine("Введіть циліндричні координати (Радіус Кут Висота):");
+        string[] cylindricalInput = Console.ReadLine()?.Split();
+        if (cylindricalInput != null && cylindricalInput.Length == 3 &&
+            double.TryParse(cylindricalInput[0], out double cylindricalRadius) &&
+            double.TryParse(cylindricalInput[1], out double cylindricalAngle) &&
+            double.TryParse(cylindricalInput[2], out double cylindricalHeight))
+        {
+            CylindricalCoordinates cylindricalPoint = new CylindricalCoordinates();
+            cylindricalPoint.SetCylindricalCoordinates(cylindricalRadius, cylindricalAngle, cylindricalHeight);
+
+            Console.WriteLine($"Циліндричні координати: Радіус = {cylindricalPoint.Radius}, Кут = {cylindricalPoint.Angle}, Висота = {cylindricalPoint.Height}");
+
+            (double x, double y, double z) = cylindricalPoint.ConvertToCartesian();
+            Console.WriteLine($"Перетворено у Декартові: X = {x}, Y = {y}, Z = {z}");
+        }
+        else
+        {
+            Console.WriteLine("Неправильний формат введення для циліндричних координат.");
+        }
+    }
+}
