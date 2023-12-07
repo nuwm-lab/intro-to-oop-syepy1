@@ -1,0 +1,103 @@
+using System;
+
+class Point3D
+{
+    private double x;
+    private double y;
+    private double z;
+
+    public Point3D(double x, double y, double z)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public bool AreCoordinatesInteger()
+    {
+        return Math.Floor(x) == x && Math.Floor(y) == y && Math.Floor(z) == z;
+    }
+
+    public bool IsInFirstOctant()
+    {
+        return x > 0 && y > 0 && z > 0;
+    }
+
+    ~Point3D()
+    {
+        Console.WriteLine("Я запустився");
+    }
+}
+
+class Program
+{
+    static void CreatePoints()
+    {
+        Console.WriteLine("Введіть кількість точок:");
+        if (int.TryParse(Console.ReadLine(), out int numberOfPoints) && numberOfPoints > 0)
+        {
+            Point3D[] points = new Point3D[numberOfPoints];
+
+            for (int i = 0; i < numberOfPoints; i++)
+            {
+                Console.WriteLine($"Введіть координати для точки {i + 1}:");
+                double[] vertex = ReadVertex();
+                points[i] = new Point3D(vertex[0], vertex[1], vertex[2]);
+            }
+
+            int integerCoordinatePoints = 0;
+            int firstOctantPoints = 0;
+
+            foreach (Point3D point in points)
+            {
+                if (point.AreCoordinatesInteger())
+                    integerCoordinatePoints++;
+
+                if (point.IsInFirstOctant())
+                    firstOctantPoints++;
+            }
+
+            Console.WriteLine($"Кількість точок з цілими координатами: {integerCoordinatePoints}");
+            Console.WriteLine($"Кількість точок в першому октанті: {firstOctantPoints}");
+        }
+        else
+        {
+            Console.WriteLine("Невірне введення кількості точок.");
+        }
+    }
+    static void Main()
+    {
+        CreatePoints();
+
+        long[] garbage = new long[1000000000];
+        int xGarb = 0;
+
+        while (xGarb < 1000000000)
+        {
+            garbage[xGarb] = 99999999999999999;
+            xGarb++;
+        }
+        Console.WriteLine("Long created: " + xGarb);
+    }
+
+    static double[] ReadVertex()
+    {
+        double[] vertex = new double[3];
+
+        for (int i = 0; i < 3; i++)
+        {
+            Console.Write($"Координата {i + 1}: ");
+            if (double.TryParse(Console.ReadLine(), out double coordinate))
+            {
+                vertex[i] = coordinate;
+            }
+            else
+            {
+                Console.WriteLine("Невірний формат введення. Будь ласка, введіть числове значення.");
+                i--;
+            }
+        }
+
+        return vertex;
+    }
+}
